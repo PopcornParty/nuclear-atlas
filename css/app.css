@@ -29,7 +29,7 @@ button:active { opacity: 0.84; }
 .stage { position: absolute; inset: 0; }
 #map { position: absolute; inset: 0; background: #121a22; }
 .leaflet-container { background: #121a22; width: 100%; height: 100%; font: inherit; }
-.leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale { display: none !important; }
+.leaflet-tile-pane { filter: brightness(0.72) saturate(0.4); }
 .top {
   position: absolute;
   top: 0;
@@ -57,12 +57,34 @@ button:active { opacity: 0.84; }
   background: var(--panel);
   border-top: 1px solid var(--line);
   border-radius: 16px 16px 0 0;
-  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
-  display: grid;
+  padding: 8px 12px calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  max-height: 42dvh;
+  max-height: 52dvh;
   overflow: auto;
 }
+.panel { display: none; }
+.panel.on { display: flex; flex-direction: column; gap: 8px; }
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 64px;
+  bottom: 0;
+  z-index: 900;
+  background: #10151b;
+  border-top: 1px solid var(--line);
+  border-radius: 16px 16px 0 0;
+  display: none;
+  flex-direction: column;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
+}
+.sheet.open { display: flex; }
+.sheet header { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px; flex: 0 0 auto; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 8px; flex: 0 0 auto; }
+.tabs button { flex: 1 1 30%; color: #f2f5f7; background: #1c2833; }
+.sheet .body { overflow: auto; padding: 4px 14px 28px; font-size: 16px; line-height: 1.45; -webkit-overflow-scrolling: touch; }
 .scenarios { display: flex; gap: 8px; overflow-x: auto; }
 .scenarios button { flex: 0 0 148px; width: auto; text-align: left; min-height: 52px; }
 .handle { width: 42px; height: 4px; border-radius: 4px; background: #3a4652; margin: 2px auto 4px; }
@@ -72,8 +94,8 @@ button:active { opacity: 0.84; }
 .group-tabs button { width: 100%; }
 .lock-row { display: flex; align-items: center; gap: 8px; min-height: 48px; font-size: 16px; }
 .lock-row input { width: 22px; height: 22px; }
-.panel { display: none; gap: 8px; }
-.panel.on { display: grid; }
+.panel { display: none; }
+.panel.on { display: flex; flex-direction: column; gap: 8px; }
 .scenarios { display: flex; gap: 8px; overflow-x: auto; }
 .scenarios button { flex: 0 0 148px; width: auto; text-align: left; min-height: 52px; }
 .scenarios button small { display: block; color: var(--muted); font-size: 12px; font-weight: 450; }
@@ -86,29 +108,12 @@ select, input[type="range"] { min-height: 48px; width: 100%; background: var(--p
 .legend h2 { margin: 0; font-size: 12px; letter-spacing: 0.12em; }
 .legend p, .credit, .warn, .src { color: var(--muted); font-size: 14px; margin: 6px 0; }
 .swatch { display: inline-block; width: 12px; height: 12px; margin-right: 6px; }
-.sheet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 800;
-  background: #10151b;
-  border-top: 1px solid var(--line);
-  border-radius: 16px 16px 0 0;
-  max-height: 62dvh;
-  display: none;
-  flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom);
-}
 .card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 0 0 8px; }
 .card b { display: block; margin-bottom: 4px; }
 .card p { margin: 4px 0; }
 .sheet .body table { display: block; overflow-x: auto; }
-.sheet.open { display: flex; }
-.sheet header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
-.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 12px 8px; }
-.tabs button { flex: 0 0 auto; }
-.sheet .body { overflow: auto; padding: 4px 14px 18px; font-size: 16px; line-height: 1.45; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 8px; }
+.tabs button { flex: 1 1 30%; color: #f2f5f7; background: #1c2833; }
 .cat { font-weight: 700; }
 .cat.EXTREME, .cat.MAJOR { color: #e7b2a4; }
 .cat.MODERATE { color: #e0b15a; }

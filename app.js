@@ -250,8 +250,15 @@
     renderLayers();
   }
 
-  function openSheet() { els.sheet.classList.add("open"); }
-  function closeSheet() { els.sheet.classList.remove("open"); }
+  function openSheet() {
+    els.sheet.classList.add("open");
+    document.getElementById("dock").hidden = true;
+  }
+  function closeSheet() {
+    els.sheet.classList.remove("open");
+    document.getElementById("dock").hidden = false;
+    NA.mapView.invalidate();
+  }
 
   function renderSheet() {
     const tabs = [

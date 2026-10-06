@@ -142,17 +142,10 @@
     map.createPane("effects");
     map.getPane("effects").style.zIndex = "650";
     map.getPane("effects").style.pointerEvents = "none";
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      attribution: "",
-      subdomains: "abcd",
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "OpenStreetMap",
       maxZoom: 19
-    }).addTo(map).on("tileerror", function () {
-      const note = document.getElementById("readout");
-      if (note && !note.dataset.tile) {
-        note.dataset.tile = "1";
-        note.textContent = "Base tiles did not load. Country shapes are still on the map.";
-      }
-    });
+    }).addTo(map);
     const Effect = createEffectLayer();
     effectLayer = new Effect();
     effectLayer.addTo(map);
