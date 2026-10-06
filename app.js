@@ -413,10 +413,6 @@
   document.getElementById("btn-more").addEventListener("click", function () {
     document.getElementById("more-panel").classList.toggle("open");
   });
-  document.getElementById("btn-zoom-in").addEventListener("click", function () { NA.mapView.getMap().zoomIn(); });
-  document.getElementById("btn-zoom-out").addEventListener("click", function () { NA.mapView.getMap().zoomOut(); });
-  document.getElementById("btn-legend").addEventListener("click", function () { document.getElementById("legend").classList.toggle("open"); });
-  document.getElementById("btn-opacity").addEventListener("click", function () { document.querySelector(".opacity").classList.toggle("open"); });
   document.getElementById("btn-learn").addEventListener("click", openLearn);
   document.getElementById("btn-sources").addEventListener("click", openAllSources);
   document.getElementById("sheet-close").addEventListener("click", closeSheet);

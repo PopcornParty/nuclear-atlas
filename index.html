@@ -28,14 +28,9 @@
     </header>
     <div class="stage">
       <div id="map" role="application" aria-label="World map"></div>
-      <div class="legend" id="legend"></div>
-      <div class="layers" id="layers"></div>
-      <div class="opacity">
-        <label for="opacity">Layer opacity</label>
-        <input id="opacity" type="range" min="0.25" max="0.9" step="0.01" value="0.72" />
-      </div>
     </div>
     <aside class="dock" id="dock">
+      <div class="layers" id="layers"></div>
       <div class="scenarios" id="scenarios"></div>
       <div class="readout" id="readout">Choose a scenario, then tap the map.</div>
       <button type="button" class="primary" id="btn-sim">SIMULATE</button>
@@ -44,6 +39,11 @@
         <button type="button" id="btn-more">More</button>
       </div>
       <div class="more" id="more-panel">
+        <div class="legend" id="legend"></div>
+        <div class="opacity">
+          <label for="opacity">Layer opacity</label>
+          <input id="opacity" type="range" min="0.25" max="0.9" step="0.01" value="0.72" />
+        </div>
         <div class="row" id="wind-row" hidden>
           <label>Wind
             <select id="wind-speed"><option value="15">15 mph</option><option value="30">30 mph</option></select>
@@ -61,14 +61,7 @@
           <button type="button" id="btn-new">New scenario</button>
           <button type="button" id="btn-reset-view">Reset view</button>
         </div>
-        <div class="row">
-          <button type="button" id="btn-zoom-in">Zoom in</button>
-          <button type="button" id="btn-zoom-out">Zoom out</button>
-        </div>
-        <div class="row">
-          <button type="button" id="btn-legend">Legend</button>
-          <button type="button" id="btn-opacity">Opacity</button>
-        </div>
+        <p class="credit">Map data: OpenStreetMap and CARTO. Pinch the map to zoom.</p>
         <label>Compare with
           <select id="compare"><option value="">None</option></select>
         </label>

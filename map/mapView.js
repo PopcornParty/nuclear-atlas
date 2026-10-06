@@ -147,11 +147,10 @@
   }
 
   function mount(el) {
-    map = L.map(el, { zoomControl: false, minZoom: 2, maxZoom: 10, worldCopyJump: true, attributionControl: true });
+    map = L.map(el, { zoomControl: false, minZoom: 2, maxZoom: 10, worldCopyJump: true, attributionControl: false });
     map.setView([home.lat, home.lon], home.zoom);
-    L.control.zoom({ position: "bottomright" }).addTo(map);
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; OpenStreetMap &copy; CARTO",
+      attribution: "",
       subdomains: "abcd",
       maxZoom: 19
     }).addTo(map).on("tileerror", function () {
@@ -161,7 +160,6 @@
         note.textContent = "Base tiles did not load. Country shapes are still on the map.";
       }
     });
-    L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
     const Effect = createEffectLayer();
     effectLayer = new Effect();
     effectLayer.addTo(map);
