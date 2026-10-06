@@ -19,6 +19,8 @@
     let exposed = 0;
     let exposedHigh = 0;
     let areaHit = 0;
+    const local = na().places && na().places.nearest(lat, lon, 220);
+    const localDensity = local ? local.place.density : null;
     features.forEach(function (f) {
       const box = na().bbox(f.geometry);
       const pad = reach / 100;
@@ -46,7 +48,8 @@
       areaHit += land;
       let people = null;
       if (typeof pop === "number" && isFinite(pop) && area > 0) {
-        people = pop * (land / area);
+        const density = localDensity || (pop / area);
+        people = density * land;
         exposed += people;
         if (RANK[worst] >= RANK.MAJOR) exposedHigh += people;
       }
@@ -74,6 +77,7 @@
       affectedLandKm2: areaHit,
       exposedPopulation: exposed,
       higherImpactExposure: exposedHigh,
+      place: local ? { name: local.place.name, kind: local.place.kind, distanceKm: local.distanceKm, pop: local.place.pop, areaKm2: local.place.areaKm2, density: local.place.density } : null,
       urbanArea: null,
       urbanNote: "Urban area is not calculated. This build has no urban-extent dataset, so none is invented.",
       agriculturalArea: null,

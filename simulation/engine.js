@@ -36,13 +36,18 @@
     const blast = physical.blast.contours.map(function (c) {
       return c.psi + " psi at " + c.radiusKm.toFixed(1) + " km";
     }).join(", ");
-    const country = population.countries[0] ? population.countries[0].name : "no country polygon";
+    const place = population.place;
+    const placeLine = place
+      ? "Nearest place stats: " + place.name + " (" + place.kind + "), " + Math.round(place.distanceKm) + " km away, population " + Math.round(place.pop).toLocaleString() + ", area " + Math.round(place.areaKm2).toLocaleString() + " km², density " + place.density.toFixed(1) + " people/km². The people estimate uses this density times the sampled footprint."
+      : "No nearby place file matched. The people estimate uses the country average density.";
     const people = population.exposedPopulation;
+    const country = population.countries[0] ? population.countries[0].name : "no country polygon";
     const list = [
       { text: scenario.name + " at " + location.label + ": " + scenario.yieldKt + " kt, " + scenario.burstType + " burst, " + scenario.heightM + " m.", sourceIds: [scenario.source] },
       { text: "This run: " + blast + ". Heat severe-fluence radius " + physical.thermal.severeRadiusKm.toFixed(1) + " km. Prompt 1 rad contour " + physical.radiation.maxRadiusKm.toFixed(1) + " km.", sourceIds: ["glasstone-1977", "sublette-faq"] },
-      { text: "Ground zero is inside " + country + ". Sampled land inside the heat/blast circle is " + Math.round(population.affectedLandKm2) + " km². A category means the contour touches that country, not that the whole country is affected.", sourceIds: ["natural-earth"] },
-      { text: "People estimate: " + (isFinite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". It spreads the country's total population evenly, so a rural point in a large country is too high and a city centre is too low.", sourceIds: ["natural-earth", "un-wpp"] },
+      { text: placeLine, sourceIds: ["natural-earth"] },
+      { text: "Ground zero is inside " + country + ". Sampled land inside the heat/blast circle is " + Math.round(population.affectedLandKm2) + " km².", sourceIds: ["natural-earth"] },
+      { text: "People estimate: " + (isFinite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". Built from the place density above times that land area. It is not a death count.", sourceIds: ["natural-earth"] },
       { text: scenario.historicalContext, sourceIds: [scenario.source] }
     ];
     if (physical.fallout.enabled) {
@@ -77,7 +82,7 @@
         historicalCasualties: (function () {
         const n = population.exposedPopulation;
         if (!isFinite(n) || n <= 0) return "No country population was inside the sampled footprint, so the affected-people estimate is 0. Open ocean or a missed polygon does that. This is not a claim that a real detonation would have no harm.";
-        return "Estimated people inside the heat and blast footprint: " + Math.round(n).toLocaleString() + ". This spreads the country's population evenly, so a rural US point is too high and a city is too low. It is an affected-people estimate, not a counted death toll.";
+        return "Estimated people inside the footprint: " + Math.round(n).toLocaleString() + ". " + (population.place ? "Uses " + population.place.name + " density (" + population.place.density.toFixed(1) + " per km²)." : "Uses country average density.") + " Not a counted death toll.";
       })()
       },
       economic: economic,

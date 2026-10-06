@@ -453,9 +453,9 @@
       els.readout.textContent = "Historic site off. Tap the map to move " + s.name + ".";
     }
   });
+  NA.runSimulate = simulate;
   document.getElementById("dock").addEventListener("click", function (ev) {
-    const btn = ev.target.closest("#btn-sim");
-    if (btn) simulate();
+    if (ev.target.closest("#btn-sim")) simulate();
   });
   document.getElementById("btn-results").addEventListener("click", function () {
     if (!result) { els.readout.textContent = "Run SIMULATE first."; return; }
