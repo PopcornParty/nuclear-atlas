@@ -16,34 +16,36 @@
 </head>
 <body>
   <div class="app">
-    <header class="top">
-      <div>
-        <div class="brand">NUCLEAR ATLAS</div>
-        <p class="tag">Educational effects model. Not a forecast.</p>
-      </div>
-      <div class="top-actions">
-        <button type="button" id="btn-learn">Learn</button>
-        <button type="button" id="btn-sources">Sources</button>
-      </div>
-    </header>
     <div class="stage">
       <div id="map" role="application" aria-label="World map"></div>
+      <header class="top">
+        <div class="brand">NUCLEAR ATLAS</div>
+        <div class="top-actions">
+          <button type="button" id="btn-learn">Learn</button>
+          <button type="button" id="btn-sources">Sources</button>
+        </div>
+      </header>
     </div>
     <aside class="dock" id="dock">
-      <div class="layers" id="layers"></div>
-      <div class="scenarios" id="scenarios"></div>
-      <div class="readout" id="readout">Choose a scenario, then tap the map.</div>
-      <button type="button" class="primary" id="btn-sim">SIMULATE</button>
-      <div class="row">
-        <button type="button" id="btn-restart">Restart</button>
-        <button type="button" id="btn-more">More</button>
+      <div class="handle" aria-hidden="true"></div>
+      <div class="tabs-main" id="main-tabs">
+        <button type="button" class="on" data-panel="run">Run</button>
+        <button type="button" data-panel="layers">Layers</button>
+        <button type="button" data-panel="more">More</button>
       </div>
-      <div class="more" id="more-panel">
+      <section class="panel on" id="panel-run">
+        <div class="scenarios" id="scenarios"></div>
+        <div class="readout" id="readout">Choose a scenario, then tap the map.</div>
+        <button type="button" class="primary" id="btn-sim">SIMULATE</button>
+      </section>
+      <section class="panel" id="panel-layers">
+        <div class="layers" id="layers"></div>
         <div class="legend" id="legend"></div>
-        <div class="opacity">
-          <label for="opacity">Layer opacity</label>
+        <label class="opacity">Layer opacity
           <input id="opacity" type="range" min="0.25" max="0.9" step="0.01" value="0.72" />
-        </div>
+        </label>
+      </section>
+      <section class="panel" id="panel-more">
         <div class="row" id="wind-row" hidden>
           <label>Wind
             <select id="wind-speed"><option value="15">15 mph</option><option value="30">30 mph</option></select>
@@ -58,14 +60,14 @@
           </label>
         </div>
         <div class="row">
+          <button type="button" id="btn-restart">Restart simulation</button>
           <button type="button" id="btn-new">New scenario</button>
-          <button type="button" id="btn-reset-view">Reset view</button>
         </div>
-        <p class="credit">Map data: OpenStreetMap and CARTO. Pinch the map to zoom.</p>
         <label>Compare with
           <select id="compare"><option value="">None</option></select>
         </label>
         <button type="button" id="btn-compare">Run comparison</button>
+        <button type="button" id="btn-reset-view">Reset view</button>
         <div class="row">
           <button type="button" id="btn-history">History</button>
           <button type="button" id="btn-export">Export</button>
@@ -73,18 +75,19 @@
           <input id="import-file" type="file" accept="application/json" hidden />
         </div>
         <div class="row timeline" id="timeline"></div>
+        <p class="credit">Pinch the map to zoom. Map data: OpenStreetMap and CARTO.</p>
         <p class="warn">Estimates are labelled. Missing data is left blank.</p>
-      </div>
+      </section>
     </aside>
+    <section class="sheet" id="sheet" aria-live="polite">
+      <header>
+        <strong id="sheet-title">Results</strong>
+        <button type="button" id="sheet-close">Close</button>
+      </header>
+      <div class="tabs" id="tabs"></div>
+      <div class="body" id="sheet-body"></div>
+    </section>
   </div>
-  <section class="sheet" id="sheet" aria-live="polite">
-    <header>
-      <strong id="sheet-title">Results</strong>
-      <button type="button" id="sheet-close">Close</button>
-    </header>
-    <div class="tabs" id="tabs"></div>
-    <div class="body" id="sheet-body"></div>
-  </section>
   <dialog class="modal" id="learn-dialog"></dialog>
   <dialog class="modal" id="source-dialog"></dialog>
   <script src="vendor/leaflet/leaflet.js"></script>

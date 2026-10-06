@@ -5,7 +5,6 @@
   --line: #26303a;
   --text: #f2f5f7;
   --muted: #89939e;
-  --heat: #d4782a;
   font-family: Inter, system-ui, sans-serif;
   color-scheme: dark;
 }
@@ -15,100 +14,107 @@ body { overflow: hidden; }
 button, select, input { font: inherit; color: var(--text); }
 button {
   min-height: 48px;
+  min-width: 48px;
   border: 1px solid var(--line);
   background: var(--panel-2);
-  border-radius: 4px;
-  padding: 0 14px;
+  border-radius: 8px;
+  padding: 0 12px;
   touch-action: manipulation;
+  font-size: 16px;
 }
-button.primary { background: #8a3b22; border-color: #c4492c; font-weight: 700; letter-spacing: 0.06em; width: 100%; }
-button.on { border-color: #f2f5f7; background: #1c2833; }
-button:active { opacity: 0.85; }
-.app {
-  height: 100dvh;
-  display: grid;
-  grid-template-rows: auto minmax(220px, 1fr) auto;
-  padding-top: env(safe-area-inset-top);
-}
+button.primary { background: #8a3b22; border-color: #c4492c; font-weight: 700; letter-spacing: 0.04em; width: 100%; }
+button.on { border-color: #f2f5f7; background: #243140; }
+button:active { opacity: 0.84; }
+.app { height: 100dvh; position: relative; overflow: hidden; }
+.stage { position: absolute; inset: 0; }
+#map { position: absolute; inset: 0; background: #121a22; }
+.leaflet-container { background: #121a22; width: 100%; height: 100%; font: inherit; }
+.leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale { display: none !important; }
 .top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 8px;
-  padding: 8px 10px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--line);
+  padding: calc(8px + env(safe-area-inset-top)) 12px 10px;
+  background: linear-gradient(#080b0f 20%, rgba(8, 11, 15, 0));
+  pointer-events: none;
 }
-.brand { font-size: 15px; letter-spacing: 0.14em; font-weight: 750; }
+.top button, .brand { pointer-events: auto; }
+.brand { font-size: 13px; letter-spacing: 0.16em; font-weight: 750; }
 .tag { display: none; }
-.top-actions { display: flex; gap: 6px; }
-.stage { position: relative; min-height: 280px; }
-#map { position: absolute; inset: 0; background: #121a22; }
-.leaflet-container { background: #121a22; font: inherit; width: 100%; height: 100%; }
-.leaflet-control-zoom, .leaflet-control-attribution, .leaflet-control-scale { display: none !important; }
-.layers { display: flex; gap: 6px; overflow-x: auto; }
-.layers button { flex: 0 0 auto; min-width: 64px; background: var(--panel-2); }
-.legend, .opacity { display: block; background: transparent; border: 0; padding: 0; font-size: 13px; }
-.legend h2 { margin: 0 0 6px; font-size: 12px; letter-spacing: 0.12em; }
-.legend p { margin: 6px 0; color: var(--muted); }
-.swatch { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+.top-actions { display: flex; gap: 8px; }
 .dock {
-  background: var(--panel);
-  border-top: 1px solid var(--line);
-  padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
-  display: grid;
-  gap: 8px;
-  max-height: 42dvh;
-  overflow: auto;
-}
-.scenarios { display: flex; gap: 8px; overflow-x: auto; }
-.scenarios button { flex: 0 0 168px; text-align: left; }
-.scenarios button small { display: block; color: var(--muted); font-size: 12px; font-weight: 450; }
-.readout { color: var(--muted); font-size: 14px; line-height: 1.35; }
-.row { display: flex; gap: 8px; }
-.row > button, .row > label { flex: 1; }
-select { min-height: 48px; width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 8px; }
-.more { display: none; gap: 8px; }
-.more.open { display: grid; }
-.warn { color: #e0b15a; font-size: 12px; margin: 0; }
-.sheet {
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 700;
+  z-index: 600;
   background: var(--panel);
   border-top: 1px solid var(--line);
-  max-height: 68dvh;
+  border-radius: 16px 16px 0 0;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  display: grid;
+  gap: 8px;
+  max-height: 46dvh;
+  overflow: auto;
+}
+.scenarios { display: flex; gap: 8px; overflow-x: auto; }
+.scenarios button { flex: 0 0 148px; width: auto; text-align: left; min-height: 52px; }
+.handle { width: 42px; height: 4px; border-radius: 4px; background: #3a4652; margin: 2px auto 4px; }
+.tabs-main { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.tabs-main button { width: 100%; }
+.panel { display: none; gap: 8px; }
+.panel.on { display: grid; }
+.scenarios { display: flex; gap: 8px; overflow-x: auto; }
+.scenarios button { flex: 0 0 148px; width: auto; text-align: left; min-height: 52px; }
+.scenarios button small { display: block; color: var(--muted); font-size: 12px; font-weight: 450; }
+.readout { color: var(--muted); font-size: 15px; line-height: 1.35; min-height: 22px; }
+.layers { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.layers button { width: 100%; }
+.row { display: flex; gap: 8px; }
+.row > button, .row > label { flex: 1; }
+select, input[type="range"] { min-height: 48px; width: 100%; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 0 8px; font-size: 16px; }
+.legend h2 { margin: 0; font-size: 12px; letter-spacing: 0.12em; }
+.legend p, .credit, .warn, .src { color: var(--muted); font-size: 14px; margin: 6px 0; }
+.swatch { display: inline-block; width: 12px; height: 12px; margin-right: 6px; }
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 800;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  border-radius: 16px 16px 0 0;
+  max-height: 72dvh;
   display: none;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
 }
 .sheet.open { display: flex; }
-.sheet header, .tabs { display: flex; gap: 6px; align-items: center; padding: 8px 10px; }
-.tabs { overflow-x: auto; border-bottom: 1px solid var(--line); }
+.sheet header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 12px 8px; }
 .tabs button { flex: 0 0 auto; }
-.sheet .body { overflow: auto; padding: 10px 12px 18px; font-size: 16px; line-height: 1.45; }
+.sheet .body { overflow: auto; padding: 4px 14px 18px; font-size: 16px; line-height: 1.45; }
 .cat { font-weight: 700; }
 .cat.EXTREME, .cat.MAJOR { color: #e7b2a4; }
 .cat.MODERATE { color: #e0b15a; }
 .cat.LIGHT { color: #8eb4c9; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 8px 4px; vertical-align: top; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 8px 2px; vertical-align: top; }
 .bar { height: 8px; background: #24303a; margin-top: 6px; }
 .bar span { display: block; height: 100%; background: #8eb4c9; }
-.modal { border: 1px solid var(--line); background: var(--panel); color: var(--text); width: min(560px, calc(100% - 16px)); max-height: 82dvh; overflow: auto; }
-.modal::backdrop { background: rgba(0, 0, 0, 0.6); }
+.modal { width: min(520px, calc(100% - 16px)); max-height: 84dvh; overflow: auto; border: 1px solid var(--line); background: var(--panel); color: var(--text); }
+.modal::backdrop { background: rgba(0, 0, 0, 0.62); }
 .topic { border-bottom: 1px solid var(--line); padding: 8px 0; }
-.src { color: var(--muted); font-size: 13px; }
 .country-tip, .pick-tip { background: #10151b; color: var(--text); border: 1px solid var(--line); }
-.leaflet-control-zoom { display: none; }
-@media (min-width: 900px) {
-  .tag { display: block; margin: 2px 0 0; color: var(--muted); font-size: 12px; }
-  .app { grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; }
-  .top { grid-column: 1 / -1; }
-  .dock { grid-column: 1; grid-row: 2; max-height: none; border-top: 0; border-right: 1px solid var(--line); }
-  .stage { grid-column: 2; grid-row: 2; }
+@media (max-width: 340px) {
+  .scenarios, .layers { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }

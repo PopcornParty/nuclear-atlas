@@ -59,7 +59,6 @@
     NA.mapView.clearSelection();
     const s = NA.scenarios.byId(id);
     els.windRow.hidden = !s.supportsFallout;
-    if (s.supportsFallout) document.getElementById("more-panel").classList.add("open");
     if (s.modelParameters.locationLocked) {
       const loc = { lat: s.modelParameters.lockedLat, lon: s.modelParameters.lockedLon, label: s.modelParameters.lockedLabel };
       NA.state.setLocation(loc);
@@ -410,8 +409,14 @@
   document.getElementById("btn-restart").addEventListener("click", restart);
   document.getElementById("btn-new").addEventListener("click", newScenario);
   document.getElementById("btn-reset-view").addEventListener("click", function () { NA.mapView.resetView(); NA.mapView.invalidate(); });
-  document.getElementById("btn-more").addEventListener("click", function () {
-    document.getElementById("more-panel").classList.toggle("open");
+  document.getElementById("main-tabs").addEventListener("click", function (ev) {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#main-tabs button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.toggle("on", p.id === "panel-" + btn.getAttribute("data-panel")); });
+    if (btn.getAttribute("data-panel") === "more" && selectedScenario() && selectedScenario().supportsFallout) {
+      document.getElementById("wind-row").hidden = false;
+    }
   });
   document.getElementById("btn-learn").addEventListener("click", openLearn);
   document.getElementById("btn-sources").addEventListener("click", openAllSources);
