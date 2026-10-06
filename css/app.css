@@ -132,3 +132,8 @@ th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 8px 2p
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+.sheet { top: calc(8px + env(safe-area-inset-top)); z-index: 1200; }
+.scenarios { display: grid; grid-template-columns: 1fr 1fr; }
+.scenarios button { width: 100%; min-width: 0; flex: none; }
+.row { flex-wrap: wrap; }
+.row > button { flex: 1 1 140px; }

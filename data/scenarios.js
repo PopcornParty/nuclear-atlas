@@ -132,6 +132,20 @@
       supportsFallout: true
     },
     {
+      id: "icbm-charlie",
+      name: "ICBM-scale case CHARLIE",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 150,
+      burstType: "air",
+      heightM: 1200,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Smaller fictional ICBM-scale energy release. Place it by tapping the map. No flight path is drawn.",
+      assumptions: ["150 kt air burst at 1200 m", "No missile trajectory"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
       id: "icbm-delta",
       name: "ICBM-scale case DELTA",
       type: "Fictional ICBM-scale energy release",
@@ -140,8 +154,22 @@
       heightM: 1500,
       source: "glasstone-1977",
       sourceDate: "1977",
-      historicalContext: "Fictional energy release in a range sometimes discussed for an intercontinental missile payload. This is not a missile, not a flight path, and not a real weapon. Tap the map to place the effect model.",
-      assumptions: ["300 kiloton air burst at 1500 m", "No missile trajectory is modelled", "Local fallout model off"],
+      historicalContext: "Fictional 300 kt energy release. Tap the map to place it. This is not a missile and not a target planner.",
+      assumptions: ["300 kt air burst at 1500 m", "No missile trajectory"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "icbm-foxtrot",
+      name: "ICBM-scale case FOXTROT",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 500,
+      burstType: "air",
+      heightM: 1600,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 500 kt energy release for scale comparison. Tap the map. No launch site and no guidance model.",
+      assumptions: ["500 kt air burst at 1600 m", "No missile trajectory"],
       modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
       supportsFallout: false
     },
@@ -154,8 +182,22 @@
       heightM: 1800,
       source: "glasstone-1977",
       sourceDate: "1977",
-      historicalContext: "Larger fictional ICBM-scale energy release for comparison. No launch site, no guidance, and no target planning. The map shows blast, heat, and prompt radiation only.",
-      assumptions: ["800 kiloton air burst at 1800 m", "No missile trajectory is modelled", "Local fallout model off"],
+      historicalContext: "Fictional 800 kt energy release. Tap the map. Blast, heat and prompt radiation only.",
+      assumptions: ["800 kt air burst at 1800 m", "No missile trajectory"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "icbm-golf",
+      name: "ICBM-scale case GOLF",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 1000,
+      burstType: "air",
+      heightM: 2000,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 1 megaton energy release. Tap the map. Not a real missile type.",
+      assumptions: ["1000 kt air burst at 2000 m", "No missile trajectory"],
       modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
       supportsFallout: false
     }

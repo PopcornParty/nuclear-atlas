@@ -32,21 +32,23 @@
     return steps;
   }
 
-  function facts(scenario, physical) {
+  function facts(scenario, location, physical, population) {
+    const blast = physical.blast.contours.map(function (c) {
+      return c.psi + " psi at " + c.radiusKm.toFixed(1) + " km";
+    }).join(", ");
+    const country = population.countries[0] ? population.countries[0].name : "no country polygon";
+    const people = population.exposedPopulation;
     const list = [
-      { text: scenario.name + " is modelled as " + scenario.yieldKt + " kilotons, " + scenario.burstType + " burst, height " + scenario.heightM + " m.", sourceIds: [scenario.source] },
-      { text: scenario.historicalContext, sourceIds: [scenario.source, "doe-trinity"].filter(function (id, i, a) { return scenario.id === "hist-trinity" ? true : id !== "doe-trinity"; }) },
-      { text: "Blast radii use cube-root scaling from a 1 Mt airburst reference (about 2.8 km at 20 psi, 7.0 km at 5 psi, 21.7 km at 1 psi), adjusted for burst height.", sourceIds: ["glasstone-1977", "lovelace-1962"] },
-      { text: "Thermal colours are a continuous fluence field anchored to a clear-day severe-fluence radius r = 0.67 × Y^0.41 km. They are not a fire outline.", sourceIds: ["sublette-faq", "glasstone-1977"] },
-      { text: "Prompt radiation falls off much faster than blast because air attenuates neutrons and gammas. It is drawn separately from fallout.", sourceIds: ["glasstone-1977", "sandia-2022"] },
-      { text: "A country category means a contour intersects that territory. It does not mean the country is destroyed.", sourceIds: ["natural-earth", "fema-planning"] },
-      { text: "Population exposure uses Natural Earth POP_EST spread evenly over the country polygon. Cities are not resolved.", sourceIds: ["natural-earth", "un-wpp"] },
-      { text: "Public preparedness sources describe getting inside, staying inside and staying tuned if fallout is possible. This app is not an emergency instruction for a real event.", sourceIds: ["ready-gov"] }
+      { text: scenario.name + " at " + location.label + ": " + scenario.yieldKt + " kt, " + scenario.burstType + " burst, " + scenario.heightM + " m.", sourceIds: [scenario.source] },
+      { text: "This run: " + blast + ". Heat severe-fluence radius " + physical.thermal.severeRadiusKm.toFixed(1) + " km. Prompt 1 rad contour " + physical.radiation.maxRadiusKm.toFixed(1) + " km.", sourceIds: ["glasstone-1977", "sublette-faq"] },
+      { text: "Ground zero is inside " + country + ". Sampled land inside the heat/blast circle is " + Math.round(population.affectedLandKm2) + " km². A category means the contour touches that country, not that the whole country is affected.", sourceIds: ["natural-earth"] },
+      { text: "People estimate: " + (isFinite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". It spreads the country's total population evenly, so a rural point in a large country is too high and a city centre is too low.", sourceIds: ["natural-earth", "un-wpp"] },
+      { text: scenario.historicalContext, sourceIds: [scenario.source] }
     ];
     if (physical.fallout.enabled) {
-      list.push({ text: "Fallout bands use a constant-wind assumption (" + physical.fallout.windMph + " mph). Miller and the MIT educational calculator both treat wind as an explicit input. This is not a weather forecast.", sourceIds: ["miller-1964", "mit-fallout", "sandia-2022"] });
+      list.push({ text: "Fallout is a simplified " + physical.fallout.windMph + " mph wind sketch, not a weather forecast. Outer band " + Math.round(physical.fallout.maxDownwindKm) + " km.", sourceIds: ["miller-1964"] });
     } else {
-      list.push({ text: "Local fallout is not modelled for this air burst. An air burst can still produce prompt radiation and, at very high altitude, other effects that are outside this model.", sourceIds: ["glasstone-1977"] });
+      list.push({ text: "Local fallout is off for this air burst. Prompt radiation is separate and much smaller than the blast.", sourceIds: ["glasstone-1977"] });
     }
     return list;
   }
@@ -97,7 +99,7 @@
     });
     const economic = na().economicModel.run(physical, population);
     const steps = timeline(scenario, physical);
-    const factList = facts(scenario, physical);
+    const factList = facts(scenario, location, physical, population);
     const summary = report(scenario, location, physical, population, economic);
     return {
       scenario: scenario,

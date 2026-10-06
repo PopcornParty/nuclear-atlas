@@ -40,7 +40,7 @@
         return;
       }
       covered++;
-      const share = Math.max(0, Math.min(1, country.intersectionKm2 / area));
+      const share = Math.max(0, Math.min(0.25, country.intersectionKm2 / area));
       const band = fractions[country.category] || fractions.LIGHT;
       low += share * band[0] * gdpMd;
       high += share * band[1] * gdpMd;
@@ -58,7 +58,7 @@
       highBillionUsd: covered ? high / 1000 : null,
       confidence: confidence,
       dataCoverage: covered + " country rows with GDP and area; " + missing + " skipped for missing data",
-      why: "Estimate depends heavily on building density, infrastructure data and local economic assumptions. This figure is an exposure share of Natural Earth GDP_MD_EST, not a measured loss.",
+      why: "Money is an exposure share of the country's dataset GDP, capped so a small circle cannot be priced as the whole country. Rural points are still too high and city points too low, because people and jobs are not mapped.",
       sectors: sectorFrom(physical, population),
       currencyNote: "Dataset currency is US dollars (GDP_MD_EST, mostly 2016). Not converted to pounds, because this build has no exchange-rate source."
     };

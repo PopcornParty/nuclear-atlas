@@ -37,7 +37,7 @@ function assert(cond, msg) {
   } else console.log("ok", msg);
 }
 
-assert(NA.scenarios.SCENARIOS.length === 9, "nine scenarios");
+assert(NA.scenarios.SCENARIOS.length === 12, "twelve scenarios");
 NA.scenarios.SCENARIOS.forEach(function (s) {
   assert(s.yieldKt > 0 && s.name && s.burstType, "scenario fields " + s.id);
   assert(!s.design && !s.delivery, "no weapon design fields");
