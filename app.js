@@ -32,13 +32,27 @@
     return NA.scenarios.byId(NA.state.sim.scenarioId);
   }
 
+  let group = "fictional";
+
+  function scenarioGroup(s) {
+    if (s.id.indexOf("hist-") === 0) return "historic";
+    if (s.id.indexOf("icbm-") === 0) return "icbm";
+    return "fictional";
+  }
+
+  function useHistoricSite() {
+    const box = document.getElementById("lock-site");
+    return !box || box.checked;
+  }
+
   function renderScenarios() {
     els.scenarios.innerHTML = "";
-    NA.scenarios.SCENARIOS.forEach(function (s) {
+    NA.scenarios.SCENARIOS.filter(function (s) { return scenarioGroup(s) === group; }).forEach(function (s) {
       const b = document.createElement("button");
       b.type = "button";
       b.className = NA.state.sim.scenarioId === s.id ? "on" : "";
-      b.innerHTML = s.name + "<small>" + s.type + " · " + s.yieldKt + " kt · " + s.burstType + "</small>";
+      const place = s.modelParameters.lockedLabel ? s.modelParameters.lockedLabel.split(",")[0] : "tap map";
+      b.innerHTML = s.name + "<small>" + s.yieldKt + " kt · " + place + "</small>";
       b.addEventListener("click", function () { chooseScenario(s.id); });
       els.scenarios.appendChild(b);
     });
@@ -59,14 +73,16 @@
     NA.mapView.clearSelection();
     const s = NA.scenarios.byId(id);
     els.windRow.hidden = !s.supportsFallout;
-    if (s.modelParameters.locationLocked) {
+    const lockRow = document.getElementById("lock-row");
+    lockRow.hidden = !s.modelParameters.lockedLat;
+    if (s.modelParameters.lockedLat && useHistoricSite()) {
       const loc = { lat: s.modelParameters.lockedLat, lon: s.modelParameters.lockedLon, label: s.modelParameters.lockedLabel };
       NA.state.setLocation(loc);
       NA.mapView.select(loc.lat, loc.lon, loc.label);
       NA.mapView.getMap().setView([loc.lat, loc.lon], 11);
-      els.readout.textContent = loc.label + " — location locked to the documented test site.";
+      els.readout.textContent = loc.label + ". Turn off “Use historic site” to move it.";
     } else {
-      els.readout.textContent = s.name + " selected. Tap the map to place this fictional case.";
+      els.readout.textContent = s.name + " selected. Tap the map to place it.";
     }
     renderScenarios();
     closeSheet();
@@ -390,8 +406,8 @@
   NA.mapView.getMap().on("click", function (ev) {
     const s = selectedScenario();
     if (!s) { els.readout.textContent = "Choose a scenario before placing a point."; return; }
-    if (s.modelParameters.locationLocked) {
-      els.readout.textContent = "Trinity stays on the documented test site.";
+    if (s.modelParameters.lockedLat && useHistoricSite()) {
+      els.readout.textContent = "Historic site is on. Turn it off to tap a new place.";
       return;
     }
     const hit = NA.geographyModel.countryAt(features, ev.latlng.lat, ev.latlng.lng);
@@ -403,7 +419,26 @@
     closeSheet();
   });
 
-  document.getElementById("btn-sim").addEventListener("click", simulate);
+  document.getElementById("group-tabs").addEventListener("click", function (ev) {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    group = btn.getAttribute("data-group");
+    document.querySelectorAll("#group-tabs button").forEach(function (b) { b.classList.toggle("on", b === btn); });
+    renderScenarios();
+  });
+  document.getElementById("lock-site").addEventListener("change", function () {
+    const s = selectedScenario();
+    if (!s) return;
+    if (useHistoricSite() && s.modelParameters.lockedLat) {
+      const loc = { lat: s.modelParameters.lockedLat, lon: s.modelParameters.lockedLon, label: s.modelParameters.lockedLabel };
+      NA.state.setLocation(loc);
+      NA.mapView.select(loc.lat, loc.lon, loc.label);
+      NA.mapView.getMap().setView([loc.lat, loc.lon], 11);
+      els.readout.textContent = loc.label;
+    } else {
+      els.readout.textContent = "Historic site off. Tap the map to move " + s.name + ".";
+    }
+  });
   document.getElementById("btn-restart").addEventListener("click", restart);
   document.getElementById("btn-new").addEventListener("click", newScenario);
   document.getElementById("btn-reset-view").addEventListener("click", function () { NA.mapView.resetView(); NA.mapView.invalidate(); });

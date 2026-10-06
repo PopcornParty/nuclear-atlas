@@ -130,6 +130,34 @@
       assumptions: ["Yield fixed at 15,000 kt", "Near-surface test", "Location locked to Bikini Atoll", "Constant-wind assumption"],
       modelParameters: { falloutEnabled: true, windMph: 15, locationLocked: true, lockedLat: 11.697, lockedLon: 165.273, lockedLabel: "Castle Bravo site, Bikini Atoll, 1 March 1954" },
       supportsFallout: true
+    },
+    {
+      id: "icbm-delta",
+      name: "ICBM-scale case DELTA",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 300,
+      burstType: "air",
+      heightM: 1500,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional energy release in a range sometimes discussed for an intercontinental missile payload. This is not a missile, not a flight path, and not a real weapon. Tap the map to place the effect model.",
+      assumptions: ["300 kiloton air burst at 1500 m", "No missile trajectory is modelled", "Local fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "icbm-echo",
+      name: "ICBM-scale case ECHO",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 800,
+      burstType: "air",
+      heightM: 1800,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Larger fictional ICBM-scale energy release for comparison. No launch site, no guidance, and no target planning. The map shows blast, heat, and prompt radiation only.",
+      assumptions: ["800 kiloton air burst at 1800 m", "No missile trajectory is modelled", "Local fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
     }
   ];
 
