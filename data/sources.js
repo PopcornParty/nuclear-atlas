@@ -149,6 +149,22 @@
       claimsSupported: [
         "Country population totals are estimates and are not a map of where people live"
       ]
+    },
+    {
+      id: "doe-hiroshima",
+      title: "The atomic bombings of Hiroshima and Nagasaki",
+      organisation: "U.S. Department of Energy, Manhattan Project history",
+      year: 1945,
+      url: "https://www.energy.gov/management/articles/manhattan-project-atomic-bombing-hiroshima-1945",
+      claimsSupported: ["Little Boy was used at Hiroshima on 6 August 1945", "Fat Man was used at Nagasaki on 9 August 1945", "Published yields are about 15 kt and 21 kt"]
+    },
+    {
+      id: "doe-bravo",
+      title: "Castle Bravo nuclear test",
+      organisation: "U.S. Department of Energy",
+      year: 1954,
+      url: "https://www.energy.gov/management/articles/castle-bravo",
+      claimsSupported: ["Castle Bravo was a 1 March 1954 test at Bikini Atoll", "Published yield was about 15 megatons"]
     }
   ];
 

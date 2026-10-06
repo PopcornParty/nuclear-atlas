@@ -54,22 +54,8 @@
       },
       _visibleLayers: function () {
         const on = this._layersOn;
-        const step = this._step;
-        const timeline = (this._result && this._result.timeline) || [];
         if (on.combined) return { heat: true, blast: true, radiation: true, fallout: true };
-        if (step < 0) return { heat: !!on.heat, blast: !!on.blast, radiation: !!on.radiation, fallout: !!on.fallout };
-        const allow = { heat: false, blast: false, radiation: false, fallout: false };
-        for (let i = 0; i <= step && i < timeline.length; i++) {
-          const layer = timeline[i].layer;
-          if (layer === "combined") { allow.heat = allow.blast = allow.radiation = allow.fallout = true; }
-          if (layer && allow.hasOwnProperty(layer)) allow[layer] = true;
-        }
-        return {
-          heat: allow.heat && on.heat,
-          blast: allow.blast && on.blast,
-          radiation: allow.radiation && on.radiation,
-          fallout: allow.fallout && on.fallout
-        };
+        return { heat: !!on.heat, blast: !!on.blast, radiation: !!on.radiation, fallout: !!on.fallout };
       },
       _pt: function (lat, lon) {
         const p = this._map.latLngToContainerPoint([lat, lon]);
@@ -77,23 +63,22 @@
       },
       _heat: function (ctx) {
         const loc = this._result.location;
-        const maxR = Math.max(this._result.physical.thermal.maxRadiusKm, 1);
-        const center = this._map.latLngToContainerPoint([loc.lat, loc.lon]);
-        const edge = this._map.latLngToContainerPoint([NA.destination(loc.lat, loc.lon, 90, maxR).lat, NA.destination(loc.lat, loc.lon, 90, maxR).lon]);
-        const px = Math.max(36, Math.hypot(edge.x - center.x, edge.y - center.y));
-        const g = ctx.createRadialGradient(center.x, center.y, px * 0.04, center.x, center.y, px);
-        g.addColorStop(0, "rgba(255, 248, 220, 0.95)");
-        g.addColorStop(0.18, "rgba(255, 176, 48, 0.88)");
-        g.addColorStop(0.45, "rgba(214, 78, 18, 0.72)");
-        g.addColorStop(0.75, "rgba(120, 36, 8, 0.45)");
-        g.addColorStop(1, "rgba(60, 16, 0, 0)");
-        ctx.save();
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = g;
+        const maxR = Math.max(this._result.physical.thermal.maxRadiusKm, 0.4);
+        const rings = 22;
+        for (let i = rings; i >= 1; i--) {
+          const t = i / rings;
+          const radiusKm = maxR * t;
+          ctx.beginPath();
+          this._circle(ctx, loc.lat, loc.lon, radiusKm);
+          const heat = 1 - t;
+          ctx.fillStyle = "rgba(" + Math.round(255) + "," + Math.round(40 + 140 * heat) + "," + Math.round(20 * heat) + "," + (0.08 + 0.55 * heat * heat) + ")";
+          ctx.fill();
+        }
         ctx.beginPath();
-        ctx.arc(center.x, center.y, px, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+        this._circle(ctx, loc.lat, loc.lon, maxR);
+        ctx.strokeStyle = "rgba(255, 48, 24, 0.95)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
       },
       _circle: function (ctx, lat, lon, radiusKm) {
         const pts = NA.ring(lat, lon, radiusKm, 64);
@@ -199,6 +184,7 @@
 
   function showResult(result, layersOn, opacity, step) {
     effectLayer.setData(result, layersOn, opacity, step);
+    fitEffect(result, result.physical.thermal.maxRadiusKm);
   }
 
   function resetView() { map.setView([home.lat, home.lon], home.zoom); }

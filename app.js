@@ -63,7 +63,7 @@
       const loc = { lat: s.modelParameters.lockedLat, lon: s.modelParameters.lockedLon, label: s.modelParameters.lockedLabel };
       NA.state.setLocation(loc);
       NA.mapView.select(loc.lat, loc.lon, loc.label);
-      NA.mapView.getMap().setView([loc.lat, loc.lon], 6);
+      NA.mapView.getMap().setView([loc.lat, loc.lon], 11);
       els.readout.textContent = loc.label + " — location locked to the documented test site.";
     } else {
       els.readout.textContent = s.name + " selected. Tap the map to place this fictional case.";
@@ -271,24 +271,20 @@
   }
 
   function summaryHtml(p) {
-    const rows = p.blast.contours.map(function (c) {
-      const width = Math.max(4, 100 * c.radiusKm / p.blast.maxRadiusKm);
-      return "<tr><td>" + c.psi + " psi</td><td class='mono'>" + n(c.radiusKm, 1) + " km</td><td class='cat " + c.category + "'>" + c.category + "</td><td>" + c.meaning + (c.interpolated ? " Interpolated." : "") + "<div class='bar'><span style='width:" + width + "%'></span></div></td></tr>";
+    const cards = p.blast.contours.map(function (c) {
+      return "<article class='card'><b>" + c.psi + " psi · " + n(c.radiusKm, 1) + " km</b><div class='cat " + c.category + "'>" + c.category + "</div><p>" + c.meaning + (c.interpolated ? " Interpolated." : "") + "</p></article>";
     }).join("");
-    return "<p><strong>" + result.scenario.name + "</strong> · " + result.scenario.yieldKt + " kt · " + result.scenario.burstType + " · " + result.scenario.heightM + " m</p>" +
-      "<p class='src'>" + result.location.label + "</p>" +
-      "<p>Status: blast " + p.blast.status + ", thermal " + p.thermal.status + ", prompt radiation " + p.radiation.status + ", fallout " + p.fallout.status + ".</p>" +
-      "<table><tr><th>Blast contour</th><th>Radius</th><th>Category</th><th>Meaning</th></tr>" + rows + "</table>" +
-      "<p>Thermal severe-fluence radius " + n(p.thermal.severeRadiusKm, 1) + " km (clear-day estimate). Prompt 1 rad contour " + n(p.radiation.maxRadiusKm, 1) + " km.</p>" +
-      (p.fallout.enabled ? "<p>Fallout model on. Wind " + p.fallout.windMph + " mph. Outer band " + n(p.fallout.maxDownwindKm, 0) + " km downwind. Estimate.</p>" : "<p>Fallout model off for this air burst.</p>") +
+    return "<article class='card'><b>" + result.scenario.name + "</b><p>" + result.scenario.yieldKt + " kt · " + result.scenario.burstType + " · " + result.scenario.heightM + " m</p><p class='src'>" + result.location.label + "</p></article>" +
+      cards +
+      "<article class='card'><b>Heat</b><p>Severe-fluence radius " + n(p.thermal.severeRadiusKm, 1) + " km. The map fades from white-hot red at the centre to a red outline.</p><b>Prompt radiation</b><p>1 rad contour " + n(p.radiation.maxRadiusKm, 1) + " km. Not fallout.</p><b>Fallout</b><p>" + (p.fallout.enabled ? "On. Outer band " + n(p.fallout.maxDownwindKm, 0) + " km. Estimate." : "Off for this air burst.") + "</p></article>" +
       "<button type='button' data-sources='" + result.report.sourceIds.join(",") + "'>VIEW SOURCES</button>";
   }
 
   function countriesHtml() {
-    const rows = result.population.countries.map(function (c) {
-      return "<tr><td>" + c.name + "</td><td class='cat " + c.category + "'>" + c.category + "</td><td>" + c.explanation + " " + c.why + "</td><td class='mono'>" + n(c.intersectionKm2, 0) + " km²</td></tr>";
+    const cards = result.population.countries.map(function (c) {
+      return "<article class='card'><b>" + c.name + "</b><div class='cat " + c.category + "'>" + c.category + "</div><p>" + c.explanation + " " + c.why + "</p><p class='src'>" + n(c.intersectionKm2, 0) + " km² of polygon overlap</p></article>";
     }).join("");
-    return rows ? "<p>A category applies only where a contour meets that country. It is not a claim about the whole country.</p><table><tr><th>Country</th><th>Category</th><th>Why</th><th>Overlapping land (sample)</th></tr>" + rows + "</table>" : "<p>No country polygon intersects the modelled footprints. Open ocean, or the footprint is smaller than the boundary resolution.</p>";
+    return cards || "<p>No country polygon intersects the modelled footprints.</p>";
   }
 
   function humanHtml() {

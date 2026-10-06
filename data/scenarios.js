@@ -88,6 +88,48 @@
         lockedLabel: "Trinity site, New Mexico (documented test coordinate)"
       },
       supportsFallout: true
+    },
+    {
+      id: "hist-little-boy",
+      name: "Historic: Little Boy",
+      type: "Historic detonation, location locked",
+      yieldKt: 15,
+      burstType: "air",
+      heightM: 600,
+      source: "doe-hiroshima",
+      sourceDate: "1945-08-06",
+      historicalContext: "Little Boy was detonated over Hiroshima on 6 August 1945. Published yield is about 15 kilotons. The burst height was about 600 metres. This scenario is locked to the documented hypocenter. It cannot be moved.",
+      assumptions: ["Yield fixed at 15 kt", "Air burst at 600 m", "Location locked to the Hiroshima hypocenter", "Local fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: true, lockedLat: 34.3947, lockedLon: 132.4547, lockedLabel: "Hiroshima hypocenter, 6 August 1945" },
+      supportsFallout: false
+    },
+    {
+      id: "hist-fat-man",
+      name: "Historic: Fat Man",
+      type: "Historic detonation, location locked",
+      yieldKt: 21,
+      burstType: "air",
+      heightM: 503,
+      source: "doe-hiroshima",
+      sourceDate: "1945-08-09",
+      historicalContext: "Fat Man was detonated over Nagasaki on 9 August 1945. Published yield is about 21 kilotons. The burst height was about 500 metres. This scenario is locked to the documented hypocenter. It cannot be moved.",
+      assumptions: ["Yield fixed at 21 kt", "Air burst at 503 m", "Location locked to the Nagasaki hypocenter", "Local fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: true, lockedLat: 32.7731, lockedLon: 129.8632, lockedLabel: "Nagasaki hypocenter, 9 August 1945" },
+      supportsFallout: false
+    },
+    {
+      id: "hist-bravo",
+      name: "Historic test: Castle Bravo",
+      type: "Extreme historical-scale test scenario",
+      yieldKt: 15000,
+      burstType: "surface",
+      heightM: 2,
+      source: "doe-bravo",
+      sourceDate: "1954-03-01",
+      historicalContext: "Castle Bravo, 1 March 1954, was a thermonuclear test at Bikini Atoll. Published yield was about 15 megatons. This scenario is locked to the test site. The fallout shape is a simplified wind model, not the 1954 weather.",
+      assumptions: ["Yield fixed at 15,000 kt", "Near-surface test", "Location locked to Bikini Atoll", "Constant-wind assumption"],
+      modelParameters: { falloutEnabled: true, windMph: 15, locationLocked: true, lockedLat: 11.697, lockedLon: 165.273, lockedLabel: "Castle Bravo site, Bikini Atoll, 1 March 1954" },
+      supportsFallout: true
     }
   ];
 

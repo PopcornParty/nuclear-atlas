@@ -88,14 +88,18 @@ select, input[type="range"] { min-height: 48px; width: 100%; background: var(--p
   right: 0;
   bottom: 0;
   z-index: 800;
-  background: var(--panel);
+  background: #10151b;
   border-top: 1px solid var(--line);
   border-radius: 16px 16px 0 0;
-  max-height: 48dvh;
+  max-height: 62dvh;
   display: none;
   flex-direction: column;
   padding-bottom: env(safe-area-inset-bottom);
 }
+.card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 0 0 8px; }
+.card b { display: block; margin-bottom: 4px; }
+.card p { margin: 4px 0; }
+.sheet .body table { display: block; overflow-x: auto; }
 .sheet.open { display: flex; }
 .sheet header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
 .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 12px 8px; }
