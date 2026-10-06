@@ -179,19 +179,24 @@
 
   function simulate() {
     const scenario = selectedScenario();
-    const loc = NA.state.sim.location;
-    if (!scenario || !loc) {
-      els.readout.textContent = "Select a scenario and a map location first.";
+    if (!scenario) {
+      els.readout.textContent = "Choose a scenario first.";
       return;
     }
+    if (!NA.state.sim.location) {
+      const c = NA.mapView.getMap().getCenter();
+      NA.state.setLocation({ lat: c.lat, lon: c.lng, label: "Map centre " + c.lat.toFixed(2) + ", " + c.lng.toFixed(2) });
+      NA.mapView.select(c.lat, c.lng, "Map centre");
+    }
+    const loc = NA.state.sim.location;
     stopPlay();
     try {
       result = NA.engine.run(scenario, loc, features, {
-        windMph: Number(els.windSpeed.value),
-        windFromDeg: Number(els.windFrom.value)
+        windMph: els.windSpeed ? Number(els.windSpeed.value) : 15,
+        windFromDeg: els.windFrom ? Number(els.windFrom.value) : 270
       });
     } catch (err) {
-      els.readout.textContent = err.message;
+      els.readout.textContent = err.message || "Simulation failed.";
       return;
     }
     NA.state.setResult(result);
@@ -201,7 +206,7 @@
     renderTimeline();
     paint();
     const people = result.population.exposedPopulation;
-    els.readout.textContent = "Simulated. Estimated people in the footprint: " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". Close is not needed — the heat is on the map. Open Results to read the numbers.";
+    els.readout.textContent = "Simulated. Estimated people in the footprint: " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". Heat is on the map. Press Results for the numbers.";
   }
 
   function saveHistory(run) {
@@ -448,7 +453,10 @@
       els.readout.textContent = "Historic site off. Tap the map to move " + s.name + ".";
     }
   });
-  document.getElementById("btn-sim").addEventListener("click", simulate);
+  document.getElementById("dock").addEventListener("click", function (ev) {
+    const btn = ev.target.closest("#btn-sim");
+    if (btn) simulate();
+  });
   document.getElementById("btn-results").addEventListener("click", function () {
     if (!result) { els.readout.textContent = "Run SIMULATE first."; return; }
     openSheet();

@@ -200,6 +200,62 @@
       assumptions: ["1000 kt air burst at 2000 m", "No missile trajectory"],
       modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
       supportsFallout: false
+    },
+    {
+      id: "fic-50",
+      name: "Fictional case DELTA",
+      type: "Small fictional nuclear detonation",
+      yieldKt: 50,
+      burstType: "air",
+      heightM: 800,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 50 kt air burst. Tap the map, or press SIMULATE to use the map centre.",
+      assumptions: ["50 kt air burst at 800 m", "Fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "fic-mt",
+      name: "Fictional case ECHO",
+      type: "Large fictional detonation",
+      yieldKt: 1000,
+      burstType: "air",
+      heightM: 2000,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 1 megaton air burst for scale. Not a weapon and not a target list.",
+      assumptions: ["1000 kt air burst at 2000 m", "Fallout model off"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "icbm-hotel",
+      name: "ICBM-scale case HOTEL",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 1200,
+      burstType: "air",
+      heightM: 2200,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 1.2 megaton energy release. Place it on the map. No flight path.",
+      assumptions: ["1200 kt air burst", "No missile trajectory"],
+      modelParameters: { falloutEnabled: false, windMph: null, locationLocked: false },
+      supportsFallout: false
+    },
+    {
+      id: "icbm-india",
+      name: "ICBM-scale case INDIA",
+      type: "Fictional ICBM-scale energy release",
+      yieldKt: 1500,
+      burstType: "surface",
+      heightM: 0,
+      source: "glasstone-1977",
+      sourceDate: "1977",
+      historicalContext: "Fictional 1.5 megaton surface-coupled energy release so the simplified fallout sketch can be compared. Not a missile flight.",
+      assumptions: ["1500 kt surface burst", "Constant-wind fallout sketch"],
+      modelParameters: { falloutEnabled: true, windMph: 15, locationLocked: false },
+      supportsFallout: true
     }
   ];
 
