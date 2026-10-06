@@ -103,6 +103,8 @@
   function paint() {
     if (!result) return;
     NA.mapView.showResult(result, NA.state.sim.layers, NA.state.sim.opacity, step);
+    const showHeat = NA.state.sim.layers.heat || NA.state.sim.layers.combined;
+    if (showHeat) NA.mapView.fitEffect(result, result.physical.thermal.maxRadiusKm);
   }
 
   function renderTimeline() {

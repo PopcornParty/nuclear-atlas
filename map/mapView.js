@@ -14,7 +14,7 @@
         this._map = m;
         this._canvas = L.DomUtil.create("canvas", "effect-canvas");
         this._canvas.style.pointerEvents = "none";
-        m.getPane("overlayPane").appendChild(this._canvas);
+        m.getPane("effects").appendChild(this._canvas);
         m.on("move zoom resize viewreset zoomend moveend", this._draw, this);
         this._draw();
       },
@@ -77,18 +77,23 @@
       },
       _heat: function (ctx) {
         const loc = this._result.location;
-        const maxR = this._result.physical.thermal.maxRadiusKm;
-        const rings = 28;
-        for (let i = rings; i >= 1; i--) {
-          const t = i / rings;
-          const rKm = maxR * t;
-          const flu = NA.thermalModel.fluenceAt(this._result.scenario.yieldKt, Math.max(rKm, 0.05)).fluence || 0;
-          const n = Math.max(0, Math.min(1, Math.log10(flu + 0.05) / Math.log10(40)));
-          ctx.beginPath();
-          this._circle(ctx, loc.lat, loc.lon, rKm);
-          ctx.fillStyle = "rgba(" + Math.round(80 + 180 * n) + "," + Math.round(40 + 80 * (1 - n)) + ",20," + (0.05 + 0.22 * n) + ")";
-          ctx.fill();
-        }
+        const maxR = Math.max(this._result.physical.thermal.maxRadiusKm, 1);
+        const center = this._map.latLngToContainerPoint([loc.lat, loc.lon]);
+        const edge = this._map.latLngToContainerPoint([NA.destination(loc.lat, loc.lon, 90, maxR).lat, NA.destination(loc.lat, loc.lon, 90, maxR).lon]);
+        const px = Math.max(36, Math.hypot(edge.x - center.x, edge.y - center.y));
+        const g = ctx.createRadialGradient(center.x, center.y, px * 0.04, center.x, center.y, px);
+        g.addColorStop(0, "rgba(255, 248, 220, 0.95)");
+        g.addColorStop(0.18, "rgba(255, 176, 48, 0.88)");
+        g.addColorStop(0.45, "rgba(214, 78, 18, 0.72)");
+        g.addColorStop(0.75, "rgba(120, 36, 8, 0.45)");
+        g.addColorStop(1, "rgba(60, 16, 0, 0)");
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, px, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
       },
       _circle: function (ctx, lat, lon, radiusKm) {
         const pts = NA.ring(lat, lon, radiusKm, 64);
@@ -147,8 +152,11 @@
   }
 
   function mount(el) {
-    map = L.map(el, { zoomControl: false, minZoom: 2, maxZoom: 10, worldCopyJump: true, attributionControl: false });
+    map = L.map(el, { zoomControl: false, minZoom: 2, maxZoom: 12, worldCopyJump: true, attributionControl: false });
     map.setView([home.lat, home.lon], home.zoom);
+    map.createPane("effects");
+    map.getPane("effects").style.zIndex = "650";
+    map.getPane("effects").style.pointerEvents = "none";
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       attribution: "",
       subdomains: "abcd",
@@ -169,7 +177,7 @@
   function setCountries(fc) {
     if (countriesLayer) map.removeLayer(countriesLayer);
     countriesLayer = L.geoJSON(fc, {
-      style: { color: "#d5e2ec", weight: 1, fillColor: "#2a3b4c", fillOpacity: 0.72 },
+      style: { color: "#c5d4e0", weight: 1, fillColor: "#1d2a36", fillOpacity: 0.28 },
       onEachFeature: function (feat, layer) {
         layer.bindTooltip(feat.properties.name, { sticky: true, className: "country-tip" });
       }
@@ -191,12 +199,22 @@
 
   function showResult(result, layersOn, opacity, step) {
     effectLayer.setData(result, layersOn, opacity, step);
-    map.panTo([result.location.lat, result.location.lon], { animate: true });
   }
 
   function resetView() { map.setView([home.lat, home.lon], home.zoom); }
+  function fitEffect(result, radiusKm) {
+    const r = Math.max(radiusKm || result.physical.thermal.maxRadiusKm, 2);
+    const lat = result.location.lat;
+    const lon = result.location.lon;
+    const n = NA.destination(lat, lon, 0, r * 1.35);
+    const s = NA.destination(lat, lon, 180, r * 1.35);
+    const e = NA.destination(lat, lon, 90, r * 1.35);
+    const w = NA.destination(lat, lon, 270, r * 1.35);
+    map.fitBounds([[s.lat, w.lon], [n.lat, e.lon]], { padding: [28, 28], maxZoom: 11, animate: false });
+    setTimeout(function () { map.invalidateSize(); if (effectLayer) effectLayer._draw(); }, 60);
+  }
   function invalidate() { if (map) map.invalidateSize(); }
   function getMap() { return map; }
 
-  return { mount: mount, setCountries: setCountries, select: select, clearSelection: clearSelection, showResult: showResult, resetView: resetView, invalidate: invalidate, getMap: getMap };
+  return { mount: mount, setCountries: setCountries, select: select, clearSelection: clearSelection, showResult: showResult, resetView: resetView, fitEffect: fitEffect, invalidate: invalidate, getMap: getMap };
 });
