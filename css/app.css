@@ -68,6 +68,10 @@ button:active { opacity: 0.84; }
 .handle { width: 42px; height: 4px; border-radius: 4px; background: #3a4652; margin: 2px auto 4px; }
 .tabs-main { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 .tabs-main button { width: 100%; }
+.group-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.group-tabs button { width: 100%; }
+.lock-row { display: flex; align-items: center; gap: 8px; min-height: 48px; font-size: 16px; }
+.lock-row input { width: 22px; height: 22px; }
 .panel { display: none; gap: 8px; }
 .panel.on { display: grid; }
 .scenarios { display: flex; gap: 8px; overflow-x: auto; }
