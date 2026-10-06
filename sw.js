@@ -1,4 +1,4 @@
-const CACHE = "nuclear-atlas-v9";
+const CACHE = "nuclear-atlas-v10";
 const FILES = [
   "./",
   "./index.html",

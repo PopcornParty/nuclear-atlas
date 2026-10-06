@@ -64,21 +64,27 @@
       _heat: function (ctx) {
         const loc = this._result.location;
         const maxR = Math.max(this._result.physical.thermal.maxRadiusKm, 0.4);
-        const rings = 22;
-        for (let i = rings; i >= 1; i--) {
-          const t = i / rings;
-          const radiusKm = maxR * t;
-          ctx.beginPath();
-          this._circle(ctx, loc.lat, loc.lon, radiusKm);
-          const heat = 1 - t;
-          ctx.fillStyle = "rgba(" + Math.round(255) + "," + Math.round(40 + 140 * heat) + "," + Math.round(20 * heat) + "," + (0.08 + 0.55 * heat * heat) + ")";
-          ctx.fill();
-        }
+        const center = this._map.latLngToContainerPoint([loc.lat, loc.lon]);
+        const edge = this._map.latLngToContainerPoint(NA.destination(loc.lat, loc.lon, 90, maxR));
+        const px = Math.max(48, Math.hypot(edge.x - center.x, edge.y - center.y));
+        const g = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, px);
+        g.addColorStop(0, "rgba(255,255,240,0.95)");
+        g.addColorStop(0.15, "rgba(255,80,20,0.85)");
+        g.addColorStop(0.45, "rgba(180,20,10,0.55)");
+        g.addColorStop(0.8, "rgba(120,10,0,0.22)");
+        g.addColorStop(1, "rgba(80,0,0,0)");
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = g;
         ctx.beginPath();
-        this._circle(ctx, loc.lat, loc.lon, maxR);
-        ctx.strokeStyle = "rgba(255, 48, 24, 0.95)";
-        ctx.lineWidth = 2;
+        ctx.arc(center.x, center.y, px, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, px, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255,40,20,0.95)";
+        ctx.lineWidth = 3;
         ctx.stroke();
+        ctx.restore();
       },
       _circle: function (ctx, lat, lon, radiusKm) {
         const pts = NA.ring(lat, lon, radiusKm, 64);

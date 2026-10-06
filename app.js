@@ -197,9 +197,11 @@
     NA.state.setResult(result);
     step = -1;
     saveHistory(result);
-    openSheet();
+    closeSheet();
     renderTimeline();
-    play();
+    paint();
+    const people = result.population.exposedPopulation;
+    els.readout.textContent = "Simulated. Estimated people in the footprint: " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". Close is not needed — the heat is on the map. Open Results to read the numbers.";
   }
 
   function saveHistory(run) {
@@ -445,6 +447,12 @@
     } else {
       els.readout.textContent = "Historic site off. Tap the map to move " + s.name + ".";
     }
+  });
+  document.getElementById("btn-sim").addEventListener("click", simulate);
+  document.getElementById("btn-results").addEventListener("click", function () {
+    if (!result) { els.readout.textContent = "Run SIMULATE first."; return; }
+    openSheet();
+    renderSheet();
   });
   document.getElementById("btn-restart").addEventListener("click", restart);
   document.getElementById("btn-new").addEventListener("click", newScenario);

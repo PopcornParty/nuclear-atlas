@@ -74,7 +74,11 @@
         higherImpactExposure: population.higherImpactExposure,
         displacement: null,
         displacementNote: "No displacement count is produced. A housing inventory is not in this build.",
-        historicalCasualties: scenario.id === "hist-trinity" ? "Trinity was a desert test. This app does not assign a death toll to it." : "No casualty count is produced. This is not a historical city case."
+        historicalCasualties: (function () {
+        const n = population.exposedPopulation;
+        if (!isFinite(n) || n <= 0) return "No country population was inside the sampled footprint, so the affected-people estimate is 0. Open ocean or a missed polygon does that. This is not a claim that a real detonation would have no harm.";
+        return "Estimated people inside the heat and blast footprint: " + Math.round(n).toLocaleString() + ". This spreads the country's population evenly, so a rural US point is too high and a city is too low. It is an affected-people estimate, not a counted death toll.";
+      })()
       },
       economic: economic,
       confidence: "Low for people and money. Medium for scaled blast radii under the stated idealisations. Fallout, when shown, is low confidence.",
