@@ -154,7 +154,13 @@
       attribution: "&copy; OpenStreetMap &copy; CARTO",
       subdomains: "abcd",
       maxZoom: 19
-    }).addTo(map);
+    }).addTo(map).on("tileerror", function () {
+      const note = document.getElementById("readout");
+      if (note && !note.dataset.tile) {
+        note.dataset.tile = "1";
+        note.textContent = "Base tiles did not load. Country shapes are still on the map.";
+      }
+    });
     L.control.scale({ imperial: false, position: "bottomleft" }).addTo(map);
     const Effect = createEffectLayer();
     effectLayer = new Effect();
@@ -165,7 +171,7 @@
   function setCountries(fc) {
     if (countriesLayer) map.removeLayer(countriesLayer);
     countriesLayer = L.geoJSON(fc, {
-      style: { color: "#8aa0b3", weight: 0.6, fillColor: "#1c2833", fillOpacity: 0.18 },
+      style: { color: "#d5e2ec", weight: 1, fillColor: "#2a3b4c", fillOpacity: 0.72 },
       onEachFeature: function (feat, layer) {
         layer.bindTooltip(feat.properties.name, { sticky: true, className: "country-tip" });
       }

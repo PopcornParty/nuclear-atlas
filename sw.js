@@ -1,4 +1,4 @@
-const CACHE = "nuclear-atlas-v2";
+const CACHE = "nuclear-atlas-v3";
 const FILES = [
   "./",
   "./index.html",
@@ -37,5 +37,11 @@ self.addEventListener("activate", function (event) {
 self.addEventListener("fetch", function (event) {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then(function (hit) { return hit || fetch(event.request); }));
+  event.respondWith(
+    fetch(event.request).then(function (res) {
+      const copy = res.clone();
+      caches.open(CACHE).then(function (cache) { cache.put(event.request, copy); });
+      return res;
+    }).catch(function () { return caches.match(event.request); })
+  );
 });

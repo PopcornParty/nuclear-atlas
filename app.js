@@ -59,6 +59,7 @@
     NA.mapView.clearSelection();
     const s = NA.scenarios.byId(id);
     els.windRow.hidden = !s.supportsFallout;
+    if (s.supportsFallout) document.getElementById("more-panel").classList.add("open");
     if (s.modelParameters.locationLocked) {
       const loc = { lat: s.modelParameters.lockedLat, lon: s.modelParameters.lockedLon, label: s.modelParameters.lockedLabel };
       NA.state.setLocation(loc);
@@ -408,7 +409,14 @@
   document.getElementById("btn-sim").addEventListener("click", simulate);
   document.getElementById("btn-restart").addEventListener("click", restart);
   document.getElementById("btn-new").addEventListener("click", newScenario);
-  document.getElementById("btn-reset-view").addEventListener("click", function () { NA.mapView.resetView(); });
+  document.getElementById("btn-reset-view").addEventListener("click", function () { NA.mapView.resetView(); NA.mapView.invalidate(); });
+  document.getElementById("btn-more").addEventListener("click", function () {
+    document.getElementById("more-panel").classList.toggle("open");
+  });
+  document.getElementById("btn-zoom-in").addEventListener("click", function () { NA.mapView.getMap().zoomIn(); });
+  document.getElementById("btn-zoom-out").addEventListener("click", function () { NA.mapView.getMap().zoomOut(); });
+  document.getElementById("btn-legend").addEventListener("click", function () { document.getElementById("legend").classList.toggle("open"); });
+  document.getElementById("btn-opacity").addEventListener("click", function () { document.querySelector(".opacity").classList.toggle("open"); });
   document.getElementById("btn-learn").addEventListener("click", openLearn);
   document.getElementById("btn-sources").addEventListener("click", openAllSources);
   document.getElementById("sheet-close").addEventListener("click", closeSheet);
@@ -469,5 +477,7 @@
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
-  setTimeout(function () { NA.mapView.invalidate(); }, 300);
+  setTimeout(function () { NA.mapView.invalidate(); }, 200);
+  window.addEventListener("resize", function () { NA.mapView.invalidate(); });
+  window.addEventListener("orientationchange", function () { setTimeout(function () { NA.mapView.invalidate(); }, 250); });
 })();

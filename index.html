@@ -19,52 +19,13 @@
     <header class="top">
       <div>
         <div class="brand">NUCLEAR ATLAS</div>
-        <p class="tag">Educational physical-effects model on a real map. Fictional cases, plus one location-locked historical test. Not a forecast and not a planning tool.</p>
+        <p class="tag">Educational effects model. Not a forecast.</p>
       </div>
       <div class="top-actions">
         <button type="button" id="btn-learn">Learn</button>
         <button type="button" id="btn-sources">Sources</button>
       </div>
     </header>
-    <aside class="dock" id="dock">
-      <div class="scenarios" id="scenarios"></div>
-      <div class="readout" id="readout">Choose a scenario, then tap the map.</div>
-      <div class="row" id="wind-row" hidden>
-        <label>Wind assumption
-          <select id="wind-speed"><option value="15">15 mph</option><option value="30">30 mph</option></select>
-        </label>
-        <label>From
-          <select id="wind-from">
-            <option value="0">North</option>
-            <option value="90">East</option>
-            <option value="180">South</option>
-            <option value="270" selected>West</option>
-          </select>
-        </label>
-      </div>
-      <div class="row">
-        <button type="button" class="primary" id="btn-sim">SIMULATE</button>
-        <button type="button" id="btn-restart">RESTART SIMULATION</button>
-      </div>
-      <div class="row">
-        <button type="button" id="btn-new">NEW SCENARIO</button>
-        <button type="button" id="btn-reset-view">Reset map view</button>
-      </div>
-      <div class="row">
-        <label>Compare with
-          <select id="compare"><option value="">None</option></select>
-        </label>
-        <button type="button" id="btn-compare">Run comparison</button>
-      </div>
-      <div class="row">
-        <button type="button" id="btn-history">History</button>
-        <button type="button" id="btn-export">Export data</button>
-        <button type="button" id="btn-import">Import data</button>
-        <input id="import-file" type="file" accept="application/json" hidden />
-      </div>
-      <div class="row timeline" id="timeline"></div>
-      <p class="warn">Every radius is a model output. Estimates are labelled. Missing data is left blank.</p>
-    </aside>
     <div class="stage">
       <div id="map" role="application" aria-label="World map"></div>
       <div class="legend" id="legend"></div>
@@ -74,6 +35,54 @@
         <input id="opacity" type="range" min="0.25" max="0.9" step="0.01" value="0.72" />
       </div>
     </div>
+    <aside class="dock" id="dock">
+      <div class="scenarios" id="scenarios"></div>
+      <div class="readout" id="readout">Choose a scenario, then tap the map.</div>
+      <button type="button" class="primary" id="btn-sim">SIMULATE</button>
+      <div class="row">
+        <button type="button" id="btn-restart">Restart</button>
+        <button type="button" id="btn-more">More</button>
+      </div>
+      <div class="more" id="more-panel">
+        <div class="row" id="wind-row" hidden>
+          <label>Wind
+            <select id="wind-speed"><option value="15">15 mph</option><option value="30">30 mph</option></select>
+          </label>
+          <label>From
+            <select id="wind-from">
+              <option value="0">North</option>
+              <option value="90">East</option>
+              <option value="180">South</option>
+              <option value="270" selected>West</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <button type="button" id="btn-new">New scenario</button>
+          <button type="button" id="btn-reset-view">Reset view</button>
+        </div>
+        <div class="row">
+          <button type="button" id="btn-zoom-in">Zoom in</button>
+          <button type="button" id="btn-zoom-out">Zoom out</button>
+        </div>
+        <div class="row">
+          <button type="button" id="btn-legend">Legend</button>
+          <button type="button" id="btn-opacity">Opacity</button>
+        </div>
+        <label>Compare with
+          <select id="compare"><option value="">None</option></select>
+        </label>
+        <button type="button" id="btn-compare">Run comparison</button>
+        <div class="row">
+          <button type="button" id="btn-history">History</button>
+          <button type="button" id="btn-export">Export</button>
+          <button type="button" id="btn-import">Import</button>
+          <input id="import-file" type="file" accept="application/json" hidden />
+        </div>
+        <div class="row timeline" id="timeline"></div>
+        <p class="warn">Estimates are labelled. Missing data is left blank.</p>
+      </div>
+    </aside>
   </div>
   <section class="sheet" id="sheet" aria-live="polite">
     <header>
