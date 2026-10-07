@@ -1,0 +1,16 @@
+:root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #102033; color: #f4f7fb; }
+button { font: inherit; color: inherit; min-height: 48px; border-radius: 10px; border: 1px solid #35506a; background: #1b3348; padding: 0 12px; }
+button.primary { background: #c45b16; border-color: #e7a15a; font-weight: 700; }
+button:disabled { opacity: 0.45; }
+.app { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+.top { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: calc(8px + env(safe-area-inset-top)) 12px 8px; background: #102033; }
+.top span { color: #b7c6d6; font-size: 14px; text-align: right; }
+#map { min-height: 0; background: #16324a; }
+.dock { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; padding: 8px 12px calc(10px + env(safe-area-inset-bottom)); background: #102033; }
+.view { position: fixed; inset: 0; z-index: 20; background: #102033; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); }
+.view header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; }
+.view p { margin: 0 12px 8px; color: #b7c6d6; }
+iframe { flex: 1; border: 0; width: 100%; background: #0c1824; }
+.plane-icon, .chicken-icon, .target-icon { font-size: 28px; line-height: 1; }

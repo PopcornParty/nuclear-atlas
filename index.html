@@ -3,122 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#080B0F" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="icon-180.png" />
-  <title>Nuclear Atlas</title>
+  <meta name="theme-color" content="#16324a" />
+  <title>Chicken Drop</title>
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="icon.svg" />
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
-  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/chicken.css" />
 </head>
 <body>
   <div class="app">
-    <div class="stage">
-      <div id="map" role="application" aria-label="World map"></div>
-      <header class="top">
-        <div class="brand">NUCLEAR ATLAS</div>
-        <div class="top-actions">
-          <button type="button" id="btn-learn">Learn</button>
-          <button type="button" id="btn-sources">Sources</button>
-        </div>
-      </header>
-    </div>
-    <aside class="dock" id="dock">
-      <div class="handle" aria-hidden="true"></div>
-      <div class="tabs-main" id="main-tabs">
-        <button type="button" class="on" data-panel="run">Run</button>
-        <button type="button" data-panel="layers">Layers</button>
-        <button type="button" data-panel="more">More</button>
-      </div>
-      <section class="panel on" id="panel-run">
-        <div class="group-tabs" id="group-tabs">
-          <button type="button" class="on" data-group="fictional">Fictional</button>
-          <button type="button" data-group="historic">Historic</button>
-          <button type="button" data-group="icbm">ICBM</button>
-        </div>
-        <div class="scenarios" id="scenarios"></div>
-        <label class="lock-row" id="lock-row" hidden>
-          <input id="lock-site" type="checkbox" checked /> Use historic site
-        </label>
-        <div class="readout" id="readout">Choose a section, then a scenario. Historic sites can be unlocked.</div>
-        <button type="button" class="primary" id="btn-sim" onclick="if (window.NA && NA.runSimulate) NA.runSimulate()">SIMULATE</button>
-        <button type="button" id="btn-results">Results</button>
-      </section>
-      <section class="panel" id="panel-layers">
-        <div class="layers" id="layers"></div>
-        <div class="legend" id="legend"></div>
-        <label class="opacity">Layer opacity
-          <input id="opacity" type="range" min="0.25" max="0.9" step="0.01" value="0.72" />
-        </label>
-      </section>
-      <section class="panel" id="panel-more">
-        <div class="row" id="wind-row" hidden>
-          <label>Wind
-            <select id="wind-speed"><option value="15">15 mph</option><option value="30">30 mph</option></select>
-          </label>
-          <label>From
-            <select id="wind-from">
-              <option value="0">North</option>
-              <option value="90">East</option>
-              <option value="180">South</option>
-              <option value="270" selected>West</option>
-            </select>
-          </label>
-        </div>
-        <div class="row">
-          <button type="button" id="btn-restart">Restart simulation</button>
-          <button type="button" id="btn-new">New scenario</button>
-        </div>
-        <label>Compare with
-          <select id="compare"><option value="">None</option></select>
-        </label>
-        <button type="button" id="btn-compare">Run comparison</button>
-        <button type="button" id="btn-reset-view">Reset view</button>
-        <div class="row">
-          <button type="button" id="btn-history">History</button>
-          <button type="button" id="btn-export">Export</button>
-          <button type="button" id="btn-import">Import</button>
-          <input id="import-file" type="file" accept="application/json" hidden />
-        </div>
-        <div class="row timeline" id="timeline"></div>
-        <p class="credit">Pinch the map to zoom. Map data: OpenStreetMap and CARTO.</p>
-        <p class="warn">Estimates are labelled. Missing data is left blank.</p>
-      </section>
+    <header class="top">
+      <strong>CHICKEN DROP</strong>
+      <span id="status">Tap the map to pick a building.</span>
+    </header>
+    <div id="map"></div>
+    <aside class="dock">
+      <button type="button" id="launch" class="primary">Launch chicken</button>
+      <button type="button" id="street" disabled>Street View</button>
+      <button type="button" id="earth" disabled>Google Earth</button>
     </aside>
-    <section class="sheet" id="sheet" aria-live="polite">
+    <section class="view" id="view" hidden>
       <header>
-        <strong id="sheet-title">Results</strong>
-        <button type="button" id="sheet-close">Close</button>
+        <strong>Building view</strong>
+        <button type="button" id="close-view">Close</button>
       </header>
-      <div class="tabs" id="tabs"></div>
-      <div class="body" id="sheet-body"></div>
+      <p id="view-note">Opens the spot you hit. Google may ask you to allow the panorama.</p>
+      <iframe id="frame" title="Street View" referrerpolicy="no-referrer"></iframe>
     </section>
   </div>
-  <dialog class="modal" id="learn-dialog"></dialog>
-  <dialog class="modal" id="source-dialog"></dialog>
   <script src="vendor/leaflet/leaflet.js"></script>
-  <script src="data/sources.js"></script>
-  <script src="data/constants.js"></script>
-  <script src="data/scenarios.js"></script>
-  <script src="data/countries.js"></script>
-  <script src="data/places.js"></script>
-  <script src="models/geoMath.js"></script>
-  <script src="models/blastModel.js"></script>
-  <script src="models/thermalModel.js"></script>
-  <script src="models/radiationModel.js"></script>
-  <script src="models/falloutModel.js"></script>
-  <script src="models/geographyModel.js"></script>
-  <script src="models/populationImpactModel.js"></script>
-  <script src="models/economicModel.js"></script>
-  <script src="models/visualisationModel.js"></script>
-  <script src="simulation/state.js"></script>
-  <script src="simulation/engine.js"></script>
-  <script src="map/mapView.js"></script>
-  <script src="components/learn.js"></script>
-  <script src="storage.js"></script>
-  <script src="app.js"></script>
+  <script src="js/chicken.js"></script>
 </body>
 </html>
