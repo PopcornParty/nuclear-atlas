@@ -40,7 +40,7 @@
         return;
       }
       covered++;
-      const share = Math.max(0, Math.min(0.25, country.intersectionKm2 / area));
+      const share = Math.max(0, Math.min(1, country.intersectionKm2 / area));
       const band = fractions[country.category] || fractions.LIGHT;
       low += share * band[0] * gdpMd;
       high += share * band[1] * gdpMd;

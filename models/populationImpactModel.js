@@ -19,7 +19,11 @@
     let exposed = 0;
     let exposedHigh = 0;
     let areaHit = 0;
-    const local = na().places && na().places.nearest(lat, lon, 220);
+    function placeRadiusKm(place) {
+      return Math.sqrt(place.areaKm2 / Math.PI);
+    }
+    const hit = na().places && na().places.nearest(lat, lon, 400);
+    const local = hit && hit.distanceKm <= placeRadiusKm(hit.place) ? hit : null;
     const localDensity = local ? local.place.density : null;
     features.forEach(function (f) {
       const box = na().bbox(f.geometry);

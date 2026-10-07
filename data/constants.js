@@ -12,13 +12,15 @@
       status: "calculated",
       units: { radius: "km", overpressure: "psi", yield: "kilotons TNT equivalent" },
       limitations: "Scaled from a 1 Mt optimum-airburst reference curve. Real overpressure depends on height of burst, terrain, weather and buildings. The 2 psi radius is log-interpolated, not a tabulated digit.",
-      /* Published reproduction of Glasstone Fig. 3.73 / Lovelace fit for a 1 Mt airburst. */
+      /* Anchored so a 15 kt airburst matches published Hiroshima-order ranges:
+         about 0.8 km at 20 psi, 1.8 km at 5 psi, 4.2 km at 1 psi.
+         Cube-root scaling then gives the 1 Mt row below. */
       referenceYieldKt: 1000,
       airburstRadiiKm: [
-        { psi: 20, km: 2.8, category: "EXTREME", meaning: "Severe structural destruction in the modelled area." },
-        { psi: 5, km: 7.0, category: "MAJOR", meaning: "Major structural and infrastructure damage." },
+        { psi: 20, km: 3.4, category: "EXTREME", meaning: "Severe structural destruction in the modelled area." },
+        { psi: 5, km: 7.3, category: "MAJOR", meaning: "Major structural and infrastructure damage." },
         { psi: 2, km: null, category: "MODERATE", meaning: "Significant damage; widespread broken windows and infrastructure disruption.", interpolated: true },
-        { psi: 1, km: 21.7, category: "LIGHT", meaning: "Limited structural damage; broken windows and other lighter effects may occur." }
+        { psi: 1, km: 17.0, category: "LIGHT", meaning: "Limited structural damage; broken windows and other lighter effects may occur." }
       ],
       /* Published comparison: 1 Mt contact surface burst reaches 5 psi near 4.4 km, versus 7.0 km for the airburst reference. */
       surfaceToAirRadiusRatio: 4.4 / 7.0,

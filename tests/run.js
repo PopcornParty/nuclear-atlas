@@ -47,8 +47,8 @@ const alpha = NA.scenarios.byId("fic-small");
 const radii = NA.blastModel.radii(alpha);
 assert(radii[0].radiusKm < radii[1].radiusKm && radii[1].radiusKm < radii[3].radiusKm, "blast radii ordered");
 const mt = NA.blastModel.radii(NA.scenarios.byId("fic-large"));
-assert(Math.abs(mt[1].radiusKm - 7) < 0.05, "1 Mt airburst 5 psi near 7 km");
-assert(Math.abs(mt[0].radiusKm - 2.8) < 0.05, "1 Mt 20 psi near 2.8 km");
+assert(Math.abs(mt[1].radiusKm - 7.3) < 0.05, "1 Mt airburst 5 psi near 7.3 km");
+assert(Math.abs(mt[0].radiusKm - 3.4) < 0.05, "1 Mt 20 psi near 3.4 km");
 const surface = NA.blastModel.radii(NA.scenarios.byId("fic-medium"));
 assert(surface[1].radiusKm < NA.blastModel.radii({ yieldKt: 100, burstType: "air", heightM: 1000 })[1].radiusKm, "surface smaller than air");
 

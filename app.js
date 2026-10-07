@@ -303,13 +303,17 @@
   }
 
   function summaryHtml(p) {
+    const pop = result.population;
+    const place = pop.place;
+    const density = place ? place.density : null;
+    const people = pop.exposedPopulation;
     const cards = p.blast.contours.map(function (c) {
-      return "<article class='card'><b>" + c.psi + " psi · " + n(c.radiusKm, 1) + " km</b><div class='cat " + c.category + "'>" + c.category + "</div><p>" + c.meaning + (c.interpolated ? " Interpolated." : "") + "</p></article>";
+      return "<article class='card'><b>" + c.psi + " psi · " + n(c.radiusKm, 2) + " km</b><p>" + c.meaning + "</p></article>";
     }).join("");
-    return "<article class='card'><b>" + result.scenario.name + "</b><p>" + result.scenario.yieldKt + " kt · " + result.scenario.burstType + " · " + result.scenario.heightM + " m</p><p class='src'>" + result.location.label + "</p></article>" +
-      cards +
-      "<article class='card'><b>Heat</b><p>Severe-fluence radius " + n(p.thermal.severeRadiusKm, 1) + " km. The map fades from white-hot red at the centre to a red outline.</p><b>Prompt radiation</b><p>1 rad contour " + n(p.radiation.maxRadiusKm, 1) + " km. Not fallout.</p><b>Fallout</b><p>" + (p.fallout.enabled ? "On. Outer band " + n(p.fallout.maxDownwindKm, 0) + " km. Estimate." : "Off for this air burst.") + "</p></article>" +
-      "<button type='button' data-sources='" + result.report.sourceIds.join(",") + "'>VIEW SOURCES</button>";
+    const how = place
+      ? place.name + " density " + density.toFixed(1) + " people/km² × " + n(pop.affectedLandKm2, 1) + " km² = " + Math.round(people).toLocaleString()
+      : "No local place file. Country average used.";
+    return "<article class='card'><b>" + result.scenario.name + " · " + result.scenario.yieldKt + " kt</b><p>" + result.location.label + "</p><p>Heat radius " + n(p.thermal.severeRadiusKm, 2) + " km. People estimate " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ".</p><p class='src'>" + how + "</p></article>" + cards;
   }
 
   function countriesHtml() {
