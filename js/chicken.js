@@ -3,45 +3,34 @@
   const launchBtn = document.getElementById("launch");
   const streetBtn = document.getElementById("street");
   const earthBtn = document.getElementById("earth");
-  const view = document.getElementById("view");
-  const frame = document.getElementById("frame");
+  const hitBox = document.getElementById("hit");
+  const hitText = document.getElementById("hit-text");
   const map = L.map("map", { zoomControl: false, worldCopyJump: true }).setView([51.5, -0.12], 4);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "OpenStreetMap" }).addTo(map);
 
   let target = null;
   let targetMarker = null;
   let flying = false;
-  const plane = L.marker([51.5, -10], { icon: L.divIcon({ className: "plane-icon", html: "✈", iconSize: [32, 32] }) }).addTo(map);
+  const plane = L.marker([51.5, -10], { icon: L.divIcon({ className: "plane-icon", html: "✈️", iconSize: [32, 32] }) }).addTo(map);
   let chicken = null;
   let audioCtx = null;
 
-  function sound(kind) {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  function sound() {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    audioCtx = audioCtx || new Ctx();
     const now = audioCtx.currentTime;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(140, now + 0.18);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
-    if (kind === "hit") {
-      osc.type = "square";
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.exponentialRampToValueAtTime(140, now + 0.18);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-      osc.start(now);
-      osc.stop(now + 0.26);
-      const bawk = audioCtx.createOscillator();
-      const bg = audioCtx.createGain();
-      bawk.type = "sawtooth";
-      bawk.connect(bg);
-      bg.connect(audioCtx.destination);
-      bawk.frequency.setValueAtTime(700, now + 0.05);
-      bawk.frequency.exponentialRampToValueAtTime(280, now + 0.35);
-      bg.gain.setValueAtTime(0.12, now + 0.05);
-      bg.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-      bawk.start(now + 0.05);
-      bawk.stop(now + 0.42);
-    }
+    osc.start(now);
+    osc.stop(now + 0.26);
   }
 
   function streetUrl(lat, lon) {
@@ -57,8 +46,7 @@
     if (targetMarker) map.removeLayer(targetMarker);
     targetMarker = L.marker(target, { icon: L.divIcon({ className: "target-icon", html: "🎯", iconSize: [32, 32] }) }).addTo(map);
     status.textContent = "Target set. Launch the chicken.";
-    streetBtn.disabled = true;
-    earthBtn.disabled = true;
+    hitBox.classList.remove("show");
   });
 
   function launch() {
@@ -67,17 +55,15 @@
       return;
     }
     flying = true;
+    status.textContent = "Chicken away.";
     const start = plane.getLatLng();
     const end = target;
     if (chicken) map.removeLayer(chicken);
     chicken = L.marker(start, { icon: L.divIcon({ className: "chicken-icon", html: "🐔", iconSize: [32, 32] }) }).addTo(map);
     const begun = performance.now();
     function step(now) {
-      const t = Math.min(1, (now - begun) / 1600);
-      const lat = start.lat + (end.lat - start.lat) * t;
-      const lon = start.lng + (end.lng - start.lng) * t;
-      chicken.setLatLng([lat, lon]);
-      plane.setLatLng([start.lat + (end.lat - start.lat) * t * 0.35, start.lng + (end.lng - start.lng) * t * 0.35]);
+      const t = Math.min(1, (now - begun) / 1400);
+      chicken.setLatLng([start.lat + (end.lat - start.lat) * t, start.lng + (end.lng - start.lng) * t]);
       if (t < 1) requestAnimationFrame(step);
       else hit(end);
     }
@@ -86,28 +72,21 @@
 
   function hit(end) {
     flying = false;
-    sound("hit");
-    status.textContent = "Hit. Opening the building view.";
-    streetBtn.disabled = false;
-    earthBtn.disabled = false;
-    frame.src = streetUrl(end.lat, end.lng);
-    view.hidden = false;
+    sound();
+    status.textContent = "Hit.";
+    hitText.textContent = "Hit at " + end.lat.toFixed(2) + ", " + end.lng.toFixed(2) + ". Street View opens in Google.";
+    hitBox.classList.add("show");
+    map.invalidateSize();
   }
 
   launchBtn.addEventListener("click", launch);
   streetBtn.addEventListener("click", function () {
-    if (!target) return;
-    frame.src = streetUrl(target.lat, target.lng);
-    view.hidden = false;
+    if (target) window.open(streetUrl(target.lat, target.lng), "_blank", "noopener");
   });
   earthBtn.addEventListener("click", function () {
-    if (!target) return;
-    window.open(earthUrl(target.lat, target.lng), "_blank", "noopener");
-  });
-  document.getElementById("close-view").addEventListener("click", function () {
-    view.hidden = true;
-    frame.src = "about:blank";
+    if (target) window.open(earthUrl(target.lat, target.lng), "_blank", "noopener");
   });
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
-  setTimeout(function () { map.invalidateSize(); }, 200);
+  setTimeout(function () { map.invalidateSize(); }, 250);
+  window.addEventListener("resize", function () { map.invalidateSize(); });
 })();

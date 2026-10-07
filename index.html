@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#16324a" />
+  <meta name="theme-color" content="#102033" />
   <title>Chicken Drop</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
@@ -17,18 +17,15 @@
     </header>
     <div id="map"></div>
     <aside class="dock">
+      <div class="hit" id="hit">
+        <p id="hit-text">Hit.</p>
+        <div class="row">
+          <button type="button" id="street">Street View</button>
+          <button type="button" id="earth">Google Earth</button>
+        </div>
+      </div>
       <button type="button" id="launch" class="primary">Launch chicken</button>
-      <button type="button" id="street" disabled>Street View</button>
-      <button type="button" id="earth" disabled>Google Earth</button>
     </aside>
-    <section class="view" id="view" hidden>
-      <header>
-        <strong>Building view</strong>
-        <button type="button" id="close-view">Close</button>
-      </header>
-      <p id="view-note">Opens the spot you hit. Google may ask you to allow the panorama.</p>
-      <iframe id="frame" title="Street View" referrerpolicy="no-referrer"></iframe>
-    </section>
   </div>
   <script src="vendor/leaflet/leaflet.js"></script>
   <script src="js/chicken.js"></script>
