@@ -1,4 +1,4 @@
-const CACHE = "chicken-drop-v2";
+const CACHE = "chicken-drop-v3";
 const FILES = ["./index.html", "./css/chicken.css", "./js/chicken.js", "./vendor/leaflet/leaflet.css", "./vendor/leaflet/leaflet.js", "./manifest.webmanifest"];
 self.addEventListener("install", function (event) {
   event.waitUntil(caches.open(CACHE).then(function (cache) { return cache.addAll(FILES); }).then(function () { return self.skipWaiting(); }));

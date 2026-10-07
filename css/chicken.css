@@ -5,33 +5,17 @@ button { font: inherit; color: inherit; min-height: 48px; border-radius: 12px; b
 button.primary { background: #c45b16; border-color: #e7a15a; font-weight: 700; }
 button:disabled { opacity: 0.45; }
 .app { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
-.top {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: flex-end;
-  padding: calc(10px + env(safe-area-inset-top)) 12px 8px;
-  background: #102033;
-}
+.top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-end; padding: calc(10px + env(safe-area-inset-top)) 12px 8px; background: #102033; }
 .top strong { font-size: 15px; letter-spacing: 0.04em; }
 .top span { color: #b7c6d6; font-size: 14px; text-align: right; max-width: 58%; }
-#map { min-height: 220px; background: #16324a; }
+#map { min-height: 180px; background: #16324a; }
 .leaflet-control-attribution { font-size: 10px; }
-.dock {
-  display: grid;
-  gap: 8px;
-  padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
-  background: #102033;
-}
+.dock { display: grid; gap: 8px; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); background: #102033; max-height: 46dvh; overflow: auto; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.stats div { background: #183044; border-radius: 10px; padding: 6px 8px; }
+.stats b { display: block; font-size: 16px; }
+.stats span { color: #b7c6d6; font-size: 12px; }
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.hit {
-  display: none;
-  gap: 8px;
-  background: #183044;
-  border: 1px solid #35506a;
-  border-radius: 12px;
-  padding: 10px;
-}
-.hit.show { display: grid; }
+.hit { display: grid; gap: 8px; }
 .hit p { margin: 0; color: #d5e2ee; font-size: 15px; }
 .plane-icon, .chicken-icon, .target-icon { font-size: 28px; line-height: 1; text-shadow: 0 1px 2px #000; }
