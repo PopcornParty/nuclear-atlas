@@ -202,11 +202,13 @@
     NA.state.setResult(result);
     step = -1;
     saveHistory(result);
-    closeSheet();
-    renderTimeline();
     paint();
+    tab.id = "summary";
+    openSheet();
+    renderSheet();
     const people = result.population.exposedPopulation;
-    els.readout.textContent = "Simulated. Estimated people in the footprint: " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ". Heat is on the map. Press Results for the numbers.";
+    const blast = result.physical.blast.maxRadiusKm;
+    els.readout.textContent = "Results: 1 psi about " + n(blast, 1) + " km. Estimated people " + (NA.finite(people) ? Math.round(people).toLocaleString() : "unavailable") + ".";
   }
 
   function saveHistory(run) {
